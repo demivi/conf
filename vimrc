@@ -1,9 +1,8 @@
 execute pathogen#infect()
 
 syntax on
-set t_Co=16
-set background=dark
-colorscheme solarized
+set term=screen-256color
+colorscheme gruvbox
 
 filetype plugin indent on
 set tabstop=4
@@ -17,10 +16,12 @@ set nowrapscan
 " disable gzip plugin
 let loaded_gzip = 1
 
+au BufRead,BufNewFile Dockerfile* set filetype=dockerfile
+
 set undofile
 set undodir=$HOME/.vim/undo
 
-"remap fzf.vim :Files
+" remap fzf.vim :Files
 nnoremap <C-p> :Files<Cr>
 
 nnoremap <F5> :w <bar> exec '!printf "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"' <bar> exec '!python '.shellescape('%')<CR><CR>
