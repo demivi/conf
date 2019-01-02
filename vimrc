@@ -2,6 +2,7 @@ execute pathogen#infect()
 
 syntax on
 set term=screen-256color
+set background=dark
 colorscheme gruvbox
 
 filetype plugin indent on
