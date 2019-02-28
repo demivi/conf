@@ -45,12 +45,25 @@ bind "$(bind -s | grep '^"\\ec"' | sed 's/ec/C-f/')"
 
 # Define fzf commands
 export FZF_DEFAULT_COMMAND="fd -H -I"
-export FZF_CTRL_T_COMMAND="fd . /"
 export FZF_ALT_C_COMMAND="fd -t d -H -I"
+
+# Change Ctrl+t behavior
+ctrl_t_root () {
+    FZF_CTRL_T_COMMAND="fd . /"
+    fzf-file-widget
+}
+
+ctrl_t () {
+    FZF_CTRL_T_COMMAND="fd -H -I"
+    fzf-file-widget
+}
+
+bind -x '"\C-t": ctrl_t_root;'
+bind -x '"\C-o": ctrl_t;'
 
 # Define Ctrl+p behavior
 fzfvim() {
-    file=$(fzf)
+    file=$(fzf --height 40% --reverse)
 
     if [ $file ]
     then
@@ -63,22 +76,12 @@ bind -x '"\C-p": fzfvim;'
 
 _gen_fzf_default_opts() {
 
-local color00='#1d2021'
-local color01='#3c3836'
-local color02='#504945'
-local color03='#665c54'
 local color04='#bdae93'
-local color05='#d5c4a1'
 local color06='#ebdbb2'
-local color07='#fbf1c7'
-local color08='#fb4934'
-local color09='#fe8019'
 local color0A='#fabd2f'
 local color0B='#b8bb26'
 local color0C='#8ec07c'
 local color0D='#83a598'
-local color0E='#d3869b'
-local color0F='#d65d0e'
 
 export FZF_DEFAULT_OPTS="
   --color=spinner:$color0A,hl:$color0B
