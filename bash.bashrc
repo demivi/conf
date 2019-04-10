@@ -65,10 +65,9 @@ bind -x '"\C-o": ctrl_t;'
 fzfvim() {
     file=$(fzf --height 40% --reverse)
 
-    if [ $file ]
-    then
-        vim $file
-        history -s vim $file
+    if [[ -n "$file" ]]; then
+        vim "$file"
+        history -s vim "$file"
     fi
 }
 
