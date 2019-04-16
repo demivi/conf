@@ -84,21 +84,22 @@ fzfvim() {
 bind -x '"\C-p": fzfvim;'
 
 back () {
-    cd ..
+    pushd .. > /dev/null
     local current="$(pwd)"
 
     case "$current" in
         "$HOME")
             ;&
         "/")
-            cd - > /dev/null
+            popd > /dev/null
             return
             ;&
         *)
             directories+=("$current")
             back "$current"
     esac
-    cd - > /dev/null
+
+    popd > /dev/null
 }
 
 # Define Ctrl+b behavior
@@ -110,7 +111,11 @@ fzfback () {
         back "$current"
 
         dest=$(printf '%s\n' "${directories[@]}" | fzf --height 40% --reverse)
-        cd "$dest"
+
+        if [[ -n "$dest" ]]; then
+            echo "$dest"
+            cd "$dest"
+        fi
     fi
 }
 
