@@ -13,7 +13,7 @@ xrandr --setprovideroutputsource modesetting NVIDIA-0
 xrandr --auto
 xrandr --dpi 96
 
-xset r rate 220 32
+xset r rate 220 60
 
 compton -b -d :0 -O 1.0 -I 1.0
 

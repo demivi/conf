@@ -34,6 +34,16 @@ bind 'Control-s: '
 # Vi command line editing mode
 set -o vi
 
+# https://unix.stackexchange.com/questions/18212/bash-history-ignoredups-and-erasedups-setting-conflict-with-common-history
+alias hfix='history -n && history | sort -k2 -k1nr | uniq -f1 | sort -n | cut -c8- > ~/.tmp$$ && history -c && history -r ~/.tmp$$ && history -w && rm ~/.tmp$$'
+HISTCONTROL=ignorespace
+shopt -s histappend
+shopt -s extglob
+HISTSIZE=2000
+HISTFILESIZE=5000
+export HISTIGNORE="!(+(*\ *))"
+PROMPT_COMMAND="hfix; $PROMPT_COMMAND"
+
 # Source fzf configuration
 [ -f /usr/share/fzf/key-bindings.bash ] && source /usr/share/fzf/key-bindings.bash
 [ -f /usr/share/fzf/completion.bash ] && source /usr/share/fzf/completion.bash
@@ -73,21 +83,52 @@ fzfvim() {
 
 bind -x '"\C-p": fzfvim;'
 
+back () {
+    cd ..
+    local current="$(pwd)"
+
+    case "$current" in
+        "$HOME")
+            ;&
+        "/")
+            cd - > /dev/null
+            return
+            ;&
+        *)
+            directories+=("$current")
+            back "$current"
+    esac
+    cd - > /dev/null
+}
+
+# Define Ctrl+b behavior
+fzfback () {
+    local current="$(pwd)"
+
+    if [[ "$current" != "/" ]]; then
+        directories=()
+        back "$current"
+
+        dest=$(printf '%s\n' "${directories[@]}" | fzf --height 40% --reverse)
+        cd "$dest"
+    fi
+}
+
+bind -x '"\C-b": fzfback;'
+
 _gen_fzf_default_opts() {
+    local color04='#bdae93'
+    local color06='#ebdbb2'
+    local color0A='#fabd2f'
+    local color0B='#b8bb26'
+    local color0C='#8ec07c'
+    local color0D='#83a598'
 
-local color04='#bdae93'
-local color06='#ebdbb2'
-local color0A='#fabd2f'
-local color0B='#b8bb26'
-local color0C='#8ec07c'
-local color0D='#83a598'
-
-export FZF_DEFAULT_OPTS="
-  --color=spinner:$color0A,hl:$color0B
-  --color=fg:$color04,header:$color0D,info:$color0A,pointer:$color0C
-  --color=marker:$color0C,fg+:$color06,prompt:$color0A,hl+:$color0B
-"
-
+    export FZF_DEFAULT_OPTS="
+      --color=spinner:$color0A,hl:$color0B
+      --color=fg:$color04,header:$color0D,info:$color0A,pointer:$color0C
+      --color=marker:$color0C,fg+:$color06,prompt:$color0A,hl+:$color0B
+    "
 }
 
 _gen_fzf_default_opts
