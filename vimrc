@@ -17,6 +17,9 @@ set nowrapscan
 " disable gzip plugin
 let loaded_gzip = 1
 
+" https://github.com/numirias/security/blob/master/doc/2019-06-04_ace-vim-neovim.md
+set nomodeline
+
 au BufRead,BufNewFile Dockerfile* set filetype=dockerfile
 
 set undofile
