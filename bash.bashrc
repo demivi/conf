@@ -34,15 +34,15 @@ bind 'Control-s: '
 # Vi command line editing mode
 set -o vi
 
-# https://unix.stackexchange.com/questions/18212/bash-history-ignoredups-and-erasedups-setting-conflict-with-common-history
-alias hfix='history -n && history | sort -k2 -k1nr | uniq -f1 | sort -n | cut -c8- > ~/.tmp$$ && history -c && history -r ~/.tmp$$ && history -w && rm ~/.tmp$$'
+#https://www.thomaslaurenson.com/blog/2018/07/02/better-bash-history/
+HISTSIZE=2000
+HISTFILESIZE=5000
+HISTCONTROL=ignoredups
 HISTCONTROL=ignorespace
 shopt -s histappend
 shopt -s extglob
-HISTSIZE=2000
-HISTFILESIZE=5000
 export HISTIGNORE="!(+(*\ *))"
-PROMPT_COMMAND="hfix; $PROMPT_COMMAND"
+export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$"\n"}history -a; history -c; history -r"
 
 # Source fzf configuration
 [ -f /usr/share/fzf/key-bindings.bash ] && source /usr/share/fzf/key-bindings.bash
